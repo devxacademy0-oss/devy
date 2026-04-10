@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html class="dark" dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Dev-X — أكاديمية البرمجة والذكاء الاصطناعي</title>
+    <link rel="icon" href="devx-logo.png" type="image/png"/>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <style>
+        body { font-family: 'Manrope', sans-serif; background-color: #090d14; color: white; }
+        .font-headline { font-family: 'Space Grotesk', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        
+        /* Smooth Scroll */
+        html { scroll-behavior: smooth; }
+
+        /* Chat scrollbar */
+        #messages::-webkit-scrollbar { width: 4px; }
+        #messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        
+        /* Messages styling */
+        .msg-bubble { padding: 12px 16px; border-radius: 12px; font-size: 13px; line-height: 1.6; max-width: 85%; }
+        .msg-bot { background: #20262f; border: 1px solid rgba(255, 255, 255, 0.05); border-top-right-radius: 4px; align-self: flex-start; }
+        .msg-user { background: rgba(199, 153, 255, 0.1); border: 1px solid rgba(199, 153, 255, 0.2); border-top-left-radius: 4px; align-self: flex-end; }
+        .msg-bubble p { margin-bottom: 8px; }
+        .msg-bubble p:last-child { margin-bottom: 0; }
+        
+        /* Chat UI components embedded */
+        .msg-bubble pre { background:#0a0e14; border:1px solid #44484f; border-radius:6px; margin:8px 0; overflow-x:auto; }
+        .msg-bubble pre code { padding:10px 12px; display:block; font-size:12px; direction:ltr; text-align:left; }
+        .msg-bubble code { font-family: monospace; color:#4af8e3; background:#151a21; padding:2px 4px; border-radius:4px; font-size:12px; }
+        
+        .typing-dot { width: 6px; height: 6px; border-radius: 50%; background: #c799ff; animation: blink 1.4s infinite both; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; background: #4af8e3; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; background: #ff9dac; }
+        @keyframes blink { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 20% { opacity: 1; transform: scale(1.2); } }
+
+        .chat-open { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+        .chat-closed { transform: translateY(20px) scale(0.95); opacity: 0; pointer-events: none; }
+        
+        /* Devy Recording Pulse */
+        .recording { animation: pulseMic 1.5s infinite; }
+        @keyframes pulseMic {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 110, 132, 0.3); color: #ff6e84; }
+            50% { box-shadow: 0 0 0 8px rgba(255, 110, 132, 0); color: white; }
+        }
+        
+        .chip { transition: all 0.2s ease; cursor: pointer; }
+        .chip:hover { border-color: #4af8e3; color: #4af8e3; }
+    </style>
+</head>
+<body class="selection:bg-[#4af8e3]/30 flex overflow-x-hidden relative">
+
+  <!-- Sidebar Nav -->
+  <aside class="w-16 h-screen border-l border-white/5 bg-[#0d1219] flex flex-col items-center py-6 gap-8 fixed top-0 right-0 z-40 shadow-xl hidden md:flex">
+    <a href="#" class="text-[#4af8e3] mt-2 mb-4 hover:scale-110 transition cursor-pointer">
+      <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">home</span>
+    </a>
+    <a href="#diplomas" class="text-white/40 hover:text-white cursor-pointer transition hover:scale-110">
+      <span class="material-symbols-outlined text-2xl">school</span>
+    </a>
+    <div class="text-white/40 hover:text-white cursor-pointer transition hover:scale-110" onclick="toggleChat()">
+      <span class="material-symbols-outlined text-2xl">smart_toy</span>
+    </div>
+    <a href="#contact" class="text-white/40 hover:text-white cursor-pointer transition hover:scale-110">
+      <span class="material-symbols-outlined text-2xl">call</span>
+    </a>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="flex-1 md:mr-16 relative">
+    
+    <!-- Top Nav -->
+    <nav class="flex justify-between items-center px-6 md:px-12 py-6 bg-[#090d14]/80 backdrop-blur-md sticky top-0 z-30 border-b border-white/5">
+       <div class="flex items-center gap-3">
+           <img src="devx-logo.png" style="filter:brightness(0) invert(1)" class="h-8 w-auto object-contain" alt="Dev-X Logo"/>
+           <div class="text-2xl font-bold font-headline text-[#c799ff] tracking-wider hidden sm:block">Dev-X</div>
+       </div>
+       <div class="hidden lg:flex gap-8 text-sm font-medium" dir="ltr">
+          <a href="#contact" class="text-white/70 hover:text-[#c799ff] transition">التواصل</a>
+          <a href="#founder" class="text-white/70 hover:text-[#c799ff] transition">المؤسس</a>
+          <a href="#branches" class="text-white/70 hover:text-[#c799ff] transition">الفروع</a>
+          <a href="#diplomas" class="text-white/70 hover:text-[#c799ff] transition">الدبلومات</a>
+       </div>
+       <button onclick="toggleChat()" class="bg-[#c799ff] text-[#440080] px-5 py-2 rounded font-bold text-sm hover:opacity-90 transition shadow-[0_0_15px_rgba(199,153,255,0.3)] inline-flex items-center gap-2">
+           <span class="material-symbols-outlined text-lg">smart_toy</span>
+           تحدث مع Devy
+       </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="px-6 md:px-12 pt-12 pb-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative">
+       <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#006a60]/20 via-transparent to-transparent pointer-events-none z-0"></div>
+       
+       <div class="z-10 relative order-2 lg:order-1 flex justify-center lg:justify-start">
+          <div class="bg-gradient-to-br from-[#1b2028]/90 to-[#0a0e14]/90 backdrop-blur-sm border border-white/10 rounded-xl p-8 font-mono text-sm shadow-[0_20px_60px_rgba(0,0,0,0.8)] relative w-full max-w-[450px]" dir="ltr">
+             <div class="text-[#a8abb3] mb-4 text-xs leading-loose">
+               <span class="text-white/40">// Dev-X Academy System</span><br>
+               <span class="text-[#c799ff]">class</span> <span class="text-[#4af8e3]">Student</span> <span class="text-[#c799ff]">extends</span> Future {<br>
+               <span class="text-[#c799ff]">&nbsp;&nbsp;constructor</span>(passion) { <br>
+               <span class="text-[#4af8e3]">&nbsp;&nbsp;&nbsp;&nbsp;super</span>(passion);<br>
+               <span class="text-white">&nbsp;&nbsp;&nbsp;&nbsp;this.skills = [];</span><br>
+               &nbsp;&nbsp;}<br>
+               <span class="text-[#c799ff]">&nbsp;&nbsp;enroll</span>(<span class="text-[#ff9dac]">diploma</span>) {<br>
+               <span class="text-white/80">&nbsp;&nbsp;&nbsp;&nbsp;if</span> (diploma === <span class="text-[#ff9dac]">'Impact Maker'</span>) {<br>
+               <span class="text-[#4af8e3]">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.becomeProfessional();</span><br>
+               <span class="text-white/80">&nbsp;&nbsp;&nbsp;&nbsp;}</span><br>
+               &nbsp;&nbsp;}<br>
+               }<br><br>
+               <span class="text-white/40">/* Ready to build real-world projects */</span>
+             </div>
+          </div>
+       </div>
+
+       <div class="z-10 relative order-1 lg:order-2 text-right">
+          <div class="mb-6 flex justify-end">
+            <span class="inline-block bg-[#4af8e3]/10 border border-[#4af8e3]/30 text-[#4af8e3] px-4 py-1.5 rounded-full text-xs font-bold tracking-widest font-label uppercase">أكاديمية البرمجة المصرية</span>
+          </div>
+          <h1 class="text-5xl lg:text-7xl font-bold font-headline leading-[1.2] mb-6">
+            مرحباً بك في <span class="text-[#c799ff] inline-block mt-2 drop-shadow-md">Dev-X</span>
+          </h1>
+          <p class="text-white/60 text-lg leading-relaxed mb-10 max-w-lg mr-auto">
+            شركة مصرية متخصصة في تعليم البرمجة والذكاء الاصطناعي — هدفنا تحويلك من مبتدئ إلى محترف قادر على بناء مستقبله الرقمي في سوق العمل المحلي والعالمي.
+          </p>
+          <div class="flex gap-4 justify-end">
+             <a href="#branches" class="border border-[#4af8e3] text-[#4af8e3] px-8 py-3 rounded font-bold text-sm hover:bg-[#4af8e3]/10 transition">الفروع والتواصل</a>
+             <a href="#diplomas" class="bg-[#c799ff] text-[#440080] px-8 py-3 rounded font-bold text-sm shadow-[0_0_20px_rgba(199,153,255,0.4)] hover:scale-105 transition">تصفح الدبلومات</a>
+          </div>
+       </div>
+    </header>
+
+    <!-- Stats & Features -->
+    <section class="px-6 md:px-12 py-12 border-y border-white/5 bg-[#0f141a]/50">
+       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+          <div class="bg-[#0a0e14] border border-white/5 rounded-xl p-8 hover:bg-[#151a21] transition text-center flex flex-col items-center">
+             <div class="w-12 h-12 rounded-full bg-[#ff9dac]/10 flex items-center justify-center mb-6 border border-[#ff9dac]/20">
+                <span class="material-symbols-outlined text-[#ff9dac]">military_tech</span>
+             </div>
+             <h3 class="text-lg font-bold mb-3 font-headline">3 شهادات معتمدة</h3>
+             <p class="text-white/50 text-sm leading-relaxed">احصل على شهادات من الجامعة البريطانية المفتوحة، ALX Africa، وأكاديمية Dev-X.</p>
+          </div>
+          <div class="bg-[#0a0e14] border border-white/5 rounded-xl p-8 hover:bg-[#151a21] transition text-center flex flex-col items-center">
+             <div class="w-12 h-12 rounded-full bg-[#c799ff]/10 flex items-center justify-center mb-6 border border-[#c799ff]/20">
+                <span class="material-symbols-outlined text-[#c799ff]">laptop_mac</span>
+             </div>
+             <h3 class="text-lg font-bold mb-3 font-headline">مشاريع تطبيقية حقيقية</h3>
+             <p class="text-white/50 text-sm leading-relaxed">تطبيق عملي 100% — ستبني بورتفوليو احترافي أثناء الدراسة يؤهلك لسوق العمل فوراً.</p>
+          </div>
+          <div class="bg-[#0a0e14] border border-white/5 rounded-xl p-8 hover:bg-[#151a21] transition text-center flex flex-col items-center">
+             <div class="w-12 h-12 rounded-full bg-[#4af8e3]/10 flex items-center justify-center mb-6 border border-[#4af8e3]/20">
+                <span class="material-symbols-outlined text-[#4af8e3]">location_on</span>
+             </div>
+             <h3 class="text-lg font-bold mb-3 font-headline">7 فروع مجهزة</h3>
+             <p class="text-white/50 text-sm leading-relaxed">متواجدون في الجيزة والقاهرة (أوسيم، الدقي، الهرم، وغيرها) لنكون الأقرب إليك.</p>
+          </div>
+       </div>
+    </section>
+
+    <!-- Diplomas Section -->
+    <section id="diplomas" class="px-6 md:px-12 py-20 pb-20">
+       <div class="flex flex-col items-center mb-16 text-center">
+          <span class="text-[#c799ff] border border-[#c799ff]/30 bg-[#c799ff]/10 px-4 py-1.5 rounded-full text-xs font-bold mb-4">مسارات التعلم</span>
+          <h2 class="text-4xl font-headline font-bold drop-shadow-md">اختر دبلومتك 🎓</h2>
+       </div>
+       
+       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Large Card (Impact Maker) -->
+          <div class="lg:col-span-2 relative bg-[#0f141a] rounded-2xl overflow-hidden group h-[450px] border border-white/10 hover:border-[#4af8e3]/50 transition-colors">
+             <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1000&q=80" class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-105 group-hover:opacity-30 transition duration-700" alt="Impact Maker"/> 
+             <div class="absolute inset-0 bg-gradient-to-t from-[#090d14] via-[#090d14]/70 to-transparent"></div>
+             
+             <div class="absolute top-6 left-6 flex gap-2">
+                <span class="bg-[#4af8e3]/20 border border-[#4af8e3]/40 text-[#4af8e3] text-[10px] font-bold px-3 py-1 rounded">⭐ الأكثر طلباً</span>
+                <span class="bg-white/10 border border-white/20 text-white text-[10px] font-bold px-3 py-1 rounded">8 شهور</span>
+             </div>
+
+             <div class="absolute inset-x-0 bottom-0 p-10 flex flex-col text-right">
+                <h3 class="text-4xl font-headline font-bold mb-4 drop-shadow-lg text-white">دبلومة Impact Maker</h3>
+                <p class="text-white/70 text-sm mb-6 max-w-lg ml-auto">
+                    برمجة + AI متكامل. من الصفر حتى سوق العمل. ستتعلم HTML/CSS/JS ثم Python والذكاء الاصطناعي مع بناء مشاريع واقعية.
+                </p>
+                <div class="flex gap-2 justify-end mb-6">
+                    <span class="bg-[#0a0e14] px-3 py-1 roundedtext-[11px] text-white/50 border border-white/10 text-xs">Open British Uni 🇬🇧</span>
+                    <span class="bg-[#0a0e14] px-3 py-1 roundedtext-[11px] text-white/50 border border-white/10 text-xs">ALX Africa 🌍</span>
+                </div>
+             </div>
+          </div>
+
+          <!-- Small Cards -->
+          <div class="flex flex-col gap-6 h-full">
+             
+             <!-- No-Code AI -->
+             <div class="relative bg-[#151a21] rounded-2xl overflow-hidden flex-1 group border border-white/10 hover:border-[#c799ff]/50 transition-colors">
+                <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=500&q=80" class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-105 transition duration-700" alt="No-Code"/>
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#090d14]"></div>
+                
+                <div class="absolute top-6 left-6">
+                    <span class="bg-[#c799ff]/20 border border-[#c799ff]/40 text-[#c799ff] text-[10px] font-bold px-3 py-1 rounded">⚡ كورس سريع</span>
+                 </div>
+
+                <div class="absolute inset-x-0 bottom-0 p-6 flex flex-col justify-end text-right">
+                   <h3 class="text-2xl font-headline font-bold mb-2 text-white">No-Code AI</h3>
+                   <p class="text-white/50 text-xs font-medium mb-3">3 شهور — الذكاء الاصطناعي بدون كود للأعمال والتسويق</p>
+                </div>
+             </div>
+
+             <!-- Juniors -->
+             <div class="relative bg-[#151a21] rounded-2xl overflow-hidden flex-1 group border border-white/10 hover:border-[#ff9500]/50 transition-colors">
+                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&q=80" class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-105 transition duration-700" alt="Juniors"/>
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#090d14]"></div>
+                
+                <div class="absolute top-6 left-6">
+                    <span class="bg-[#ff9500]/20 border border-[#ff9500]/40 text-[#ff9500] text-[10px] font-bold px-3 py-1 rounded">👶 الجيل القادم</span>
+                 </div>
+
+                <div class="absolute inset-x-0 bottom-0 p-6 flex flex-col justify-end text-right">
+                    <h3 class="text-2xl font-headline font-bold mb-2 text-white">دبلومة الجونيورز</h3>
+                    <p class="text-white/50 text-xs font-medium">من 10 إلى 15 سنة. أساسيات التفكير البرمجي وتصميم المواقع البسيطة</p>
+                </div>
+             </div>
+          </div>
+       </div>
+    </section>
+
+    <!-- Branches Section -->
+    <section id="branches" class="px-6 md:px-12 py-16 border-t border-white/5 bg-[#090d14]">
+        <div class="flex flex-col items-center mb-12 text-center">
+            <h2 class="text-3xl font-headline font-bold mb-4">📍 فروعنا حولك</h2>
+            <p class="text-white/50 text-sm">متواجدون في 7 فروع لتسهيل وصولك للتعليم المتميز</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto text-center">
+            <div class="bg-[#151a21] p-6 rounded-xl border border-white/5 hover:border-[#4af8e3]/30 transition group flex flex-col justify-center h-full">
+                <div class="text-3xl mb-3">🏙️</div><div class="font-bold text-white group-hover:text-[#4af8e3]">أوسيم</div><div class="text-[10px] text-white/40 mt-1">HM · IQ · الراعي</div>
+            </div>
+            <div class="bg-[#151a21] p-6 rounded-xl border border-white/5 hover:border-[#c799ff]/30 transition group flex flex-col justify-center h-full">
+                <div class="text-3xl mb-3">🏢</div><div class="font-bold text-white group-hover:text-[#c799ff]">البراجيل</div><div class="text-[10px] text-white/40 mt-1">مركز IQ</div>
+            </div>
+            <div class="bg-[#151a21] p-6 rounded-xl border border-white/5 hover:border-[#4af8e3]/30 transition group flex flex-col justify-center h-full">
+                <div class="text-3xl mb-3">🏛️</div><div class="font-bold text-white group-hover:text-[#4af8e3]">الدقي</div><div class="text-[10px] text-white/40 mt-1">Work Space Barah</div>
+            </div>
+            <div class="bg-[#151a21] p-6 rounded-xl border border-white/5 hover:border-[#c799ff]/30 transition group flex flex-col justify-center h-full">
+                <div class="text-3xl mb-3">🔺</div><div class="font-bold text-white group-hover:text-[#c799ff]">الهرم</div><div class="text-[10px] text-white/40 mt-1">مركز سمارت</div>
+            </div>
+            <div class="bg-[#151a21] p-6 rounded-xl border border-white/5 hover:border-[#4af8e3]/30 transition group flex flex-col justify-center h-full">
+                <div class="text-3xl mb-3">🌊</div><div class="font-bold text-white group-hover:text-[#4af8e3]">الوراق</div><div class="text-[10px] text-white/40 mt-1">فرع الوراق</div>
+            </div>
+            <div class="bg-[#151a21] p-6 rounded-xl border border-white/5 hover:border-[#c799ff]/30 transition group flex flex-col justify-center h-full">
+                <div class="text-3xl mb-3">🌳</div><div class="font-bold text-white group-hover:text-[#c799ff]">روض الفرج</div><div class="text-[10px] text-white/40 mt-1">فرع روض الفرج</div>
+            </div>
+            <div class="col-span-2 bg-gradient-to-tl from-[#c799ff]/10 to-[#4af8e3]/10 p-6 rounded-xl border border-[#c799ff]/20 flex flex-col justify-center items-center h-full">
+                <span class="material-symbols-outlined text-[#4af8e3] text-3xl mb-2">add_location</span>
+                <div class="font-bold text-white">وبنتوسع!</div>
+                <div class="text-[10px] text-white/60">فروع جديدة قريباً</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Founder Section -->
+    <section id="founder" class="px-6 md:px-12 py-20 border-t border-white/5">
+        <div class="bg-[#0f141a] rounded-3xl overflow-hidden border border-white/10 max-w-5xl mx-auto flex flex-col md:flex-row">
+            <div class="md:w-1/3 h-64 md:h-auto relative">
+                <!-- Fallback gradient if founder images are not loaded correctly, though we have 'founder.jpg' locally -->
+                <img src="founder.jpg" alt="م/ إسلام وحيد" onerror="this.src='https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80'" class="w-full h-full object-cover object-top opacity-80"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0f141a] md:bg-gradient-to-l to-transparent opacity-80"></div>
+            </div>
+            <div class="md:w-2/3 p-10 flex flex-col justify-center text-right">
+                <span class="text-[#c799ff] text-xs font-bold tracking-widest mb-2 font-headline uppercase block">Founder & CEO</span>
+                <h3 class="text-3xl font-headline font-bold mb-4">م/ إسلام وحيد</h3>
+                <p class="text-white/60 text-sm leading-relaxed mb-6">
+                    مهندس ورائد أعمال مصري، أسس Dev-X في مايو 2024 بهدف تبسيط تعليم البرمجة والذكاء الاصطناعي وجعله متاحاً لكل طالب بسعر ملائم لتأهيله لسوق العمل الرقمي.
+                </p>
+                <div class="flex gap-4 items-center justify-end">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-[#4af8e3]">2024</div><div class="text-[10px] text-white/40">سنة التأسيس</div>
+                    </div>
+                    <div class="w-px h-8 bg-white/10"></div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-[#c799ff]">1000+</div><div class="text-[10px] text-white/40">قصة نجاح</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="border-t border-white/10 pt-16 pb-12 px-6 md:px-12 bg-[#090d14]">
+       <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+           <!-- Contact Details -->
+           <div class="text-right">
+               <h3 class="text-2xl font-headline font-bold mb-6 text-white">تواصل معنا الآن</h3>
+               <p class="text-white/50 text-sm mb-8 max-w-sm ml-auto">فريق الدعم الفني جاهز للإجابة على جميع استفساراتك حول الدبلومات والأسعار.</p>
+               
+               <div class="flex flex-col gap-4">
+                   <a href="tel:01507410800" class="inline-flex items-center gap-4 bg-[#151a21] border border-white/10 px-6 py-4 rounded-xl hover:border-[#4af8e3]/50 transition group flex-row-reverse w-fit ml-auto">
+                       <span class="material-symbols-outlined text-[#4af8e3] text-2xl group-hover:scale-110 transition">call</span>
+                       <div>
+                           <div class="text-xs text-white/40 mb-1">الرقم الموحد</div>
+                           <div class="font-bold text-white text-lg tracking-wider" dir="ltr">0150 741 0800</div>
+                       </div>
+                   </a>
+                   <div class="inline-flex items-center gap-4 bg-[#151a21] border border-white/10 px-6 py-4 rounded-xl flex-row-reverse w-fit ml-auto">
+                       <span class="material-symbols-outlined text-[#c799ff] text-2xl">mail</span>
+                       <div>
+                           <div class="text-xs text-white/40 mb-1">البريد الإلكتروني</div>
+                           <div class="font-bold text-white tracking-widest" dir="ltr">info@dev-x.co</div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+
+           <!-- Dev-X Brand info -->
+           <div class="flex flex-col justify-end items-end md:items-start text-right md:text-left h-full">
+               <div class="mb-8">
+                   <div class="text-3xl font-bold font-headline mb-2 text-[#c799ff]">Dev-X Academy</div>
+                   <div class="text-white/50 text-sm max-w-sm">نصنع المبرمجين، نبتكر المستقبل، ونقود ثورة الذكاء الاصطناعي في مصر.</div>
+               </div>
+               <div class="flex gap-6 text-xs text-white/40 font-medium mb-4" dir="ltr">
+                 <a href="#" class="hover:text-[#c799ff] transition">Terms</a>
+                 <a href="#" class="hover:text-[#c799ff] transition">Privacy Policies</a>
+                 <a href="#" class="hover:text-[#c799ff] transition">AI Guidelines</a>
+              </div>
+              <div class="text-[10px] text-white/20" dir="ltr">© 2025 Dev-X. Built with Groq & Llama.</div>
+           </div>
+       </div>
+    </footer>
+  </div>
+
+  <!-- FLOATING CHAT WIDGET - Enhanced Devy -->
+  <button id="chatToggleBtn" onclick="toggleChat()" class="fixed top-auto bottom-6 md:bottom-12 right-auto left-6 md:left-12 w-16 h-16 bg-gradient-to-br from-[#c799ff] to-[#8a55ff] text-[#0a0e14] rounded-full shadow-[0_0_30px_rgba(199,153,255,0.4)] flex items-center justify-center z-[100] hover:scale-105 hover:shadow-[0_0_40px_rgba(199,153,255,0.6)] transition chat-closed group border border-white/20">
+    <span class="material-symbols-outlined text-3xl transition-transform group-hover:scale-110" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+    <span class="absolute -top-1 -right-1 flex h-4 w-4">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4af8e3] opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-4 w-4 bg-[#4af8e3] border-2 border-[#090d14]"></span>
+    </span>
+  </button>
+
+  <div id="chatWidget" class="fixed top-auto bottom-24 right-auto left-6 md:left-12 w-[360px] md:w-[420px] h-[650px] max-h-[85vh] bg-[#1a1f26]/95 backdrop-blur-2xl rounded-2xl shadow-[0_30px_80px_rgba(0,0,0,0.9)] border border-white/10 z-[110] flex flex-col overflow-hidden chat-open">
+     
+     <!-- Header -->
+     <header class="bg-[#1e2329] p-4 flex justify-between items-center border-b border-black/30">
+        <div class="flex gap-1" dir="ltr">
+            <button onclick="toggleChat()" class="w-8 h-8 rounded-full bg-white/5 text-white/60 hover:text-white hover:bg-white/10 transition flex justify-center items-center"><span class="material-symbols-outlined text-[18px]">close</span></button>
+            <button onclick="clearChat()" title="محادثة جديدة" class="w-8 h-8 rounded-full bg-white/5 text-white/60 hover:text-white hover:bg-white/10 transition flex justify-center items-center"><span class="material-symbols-outlined text-[18px]">refresh</span></button>
+            <button id="ttsBtn" onclick="toggleTTS()" title="النطق الصوتي" class="w-8 h-8 rounded-full bg-white/5 text-white/60 hover:text-[#4af8e3] hover:bg-[#4af8e3]/10 transition flex justify-center items-center"><span class="material-symbols-outlined text-[18px]">volume_up</span></button>
+            <button onclick="document.getElementById('apiZone').classList.toggle('hidden')" title="API Key" class="w-8 h-8 rounded-full bg-white/5 text-white/60 hover:text-[#c799ff] hover:bg-[#c799ff]/10 transition flex justify-center items-center"><span class="material-symbols-outlined text-[18px]">key</span></button>
+        </div>
+        
+        <div class="flex flex-row-reverse items-center gap-3">
+           <div class="relative">
+             <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#c799ff] to-[#4af8e3] flex items-center justify-center shadow-inner overflow-hidden border-2 border-[#1e2329]">
+               <img src="devx-logo.png" style="filter:brightness(0) invert(1)" class="w-6 h-6 object-contain" alt="Devy"/>
+             </div>
+             <span class="absolute bottom-0 left-0 w-2.5 h-2.5 bg-[#4af8e3] border-2 border-[#1e2329] rounded-full"></span>
+           </div>
+           <div class="text-right">
+             <div class="font-bold text-[15px] font-headline text-white mb-0.5">Devy AI</div>
+             <div class="text-[10px] text-[#4af8e3] opacity-90"><span id="modelIndicator">Llama 3.3 Text</span> ⚡</div>
+           </div>
+        </div>
+     </header>
+
+     <!-- API Zone (Hidden by default) -->
+     <div id="apiZone" class="hidden bg-[#0d1219] p-3 border-b border-white/10 transform transition-all">
+        <label class="text-[10px] text-white/40 block text-right mb-1">Groq API Key</label>
+        <div class="flex gap-2" dir="ltr">
+            <input type="password" id="apiKeyInput" placeholder="gsk_..." class="flex-1 bg-white/5 border border-white/10 rounded px-2 py-1 text-xs text-white outline-none focus:border-[#c799ff]"/>
+            <button onclick="saveApiKey()" class="bg-[#c799ff] text-[#440080] text-xs font-bold px-3 py-1 rounded">حفظ</button>
+        </div>
+     </div>
+
+     <!-- Status Box -->
+     <div id="statusBox" class="hidden bg-[#c799ff]/10 text-[#c799ff] text-[10px] text-center p-1 border-b border-[#c799ff]/20">جاري الإرسال...</div>
+
+     <!-- Messages Container -->
+     <div id="messages" class="flex-1 overflow-y-auto p-5 pb-2 flex flex-col gap-4 scroll-smooth bg-[#11151c]/40">
+        <!-- populated by JS -->
+     </div>
+
+     <!-- Preview Row -->
+     <div id="imgPreviewRow" class="hidden p-2 flex-row-reverse items-center gap-3 bg-[#1e2329] border-t border-white/10 pr-4">
+        <img id="imgPreviewThumb" src="" alt="صورة" class="w-10 h-10 object-cover rounded shadow-md border border-white/20"/>
+        <span class="text-[10px] text-white/50 text-right flex-1">تم إرفاق صورة (سيتم استخدام Llama 3.2 Vision)</span>
+        <button onclick="removeImage()" class="text-white/40 hover:text-red-400 p-1"><span class="material-symbols-outlined text-[18px]">close</span></button>
+     </div>
+
+     <!-- Input Area -->
+     <div class="p-3 bg-[#1e2329] border-t border-black/30">
+        <!-- Quick Chips -->
+        <div id="chipsArea" class="flex gap-2 flex-wrap justify-end mb-3">
+            <span onclick="document.getElementById('userInput').value='الدبلومات المتاحة؟'" class="chip bg-white/5 border border-white/10 text-white/70 text-[11px] px-3 py-1 rounded-full">الدبلومات 📚</span>
+            <span onclick="document.getElementById('userInput').value='أقرب فرع من الدقي؟'" class="chip bg-white/5 border border-white/10 text-white/70 text-[11px] px-3 py-1 rounded-full">الفروع 📍</span>
+            <span onclick="document.getElementById('userInput').value='إيه هي دبلومة Impact Maker؟'" class="chip bg-white/5 border border-white/10 text-white/70 text-[11px] px-3 py-1 rounded-full">Impact Maker ⭐</span>
+        </div>
+
+        <div class="bg-[#0a0e14] border border-white/10 rounded-xl flex items-end px-2 py-2 focus-within:border-[#c799ff]/40 transition shadow-inner">
+           
+           <div class="flex gap-1 pb-1">
+               <button id="sendBtn" onclick="sendMessage()" class="text-[#4af8e3] hover:text-[#c799ff] hover:scale-110 transition flex justify-center items-center p-1.5 rounded-lg">
+                  <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">send</span>
+               </button>
+           </div>
+           
+           <textarea id="userInput" rows="1" maxlength="2000" placeholder="اسأل Devy أي حاجة..." onkeydown="handleKey(event)" oninput="autoResize(this)" class="flex-1 bg-transparent border-none outline-none resize-none text-[13px] text-white placeholder:text-white/30 px-3 py-2 max-h-[100px] leading-relaxed" style="direction:rtl;"></textarea>
+           
+           <div class="flex gap-1 pb-1 pl-1" dir="ltr">
+               <input type="file" id="imgInput" accept="image/*" class="hidden" onchange="handleImageSelect(event)"/>
+               <button onclick="document.getElementById('imgInput').click()" class="text-white/40 hover:text-[#c799ff] transition p-1.5 rounded-lg flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">image</span></button>
+               
+               <button id="micBtn" onclick="toggleVoice()" class="text-white/40 hover:text-[#ff6e84] transition p-1.5 rounded-lg flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">mic</span></button>
+           </div>
+        </div>
+     </div>
+  </div>
+
+<script src="app.js"></script>
+</body>
+</html>
