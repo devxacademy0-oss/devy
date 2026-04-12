@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html class="dark" dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Dev-X — لوحة تحكم الإدارة</title>
+    <link rel="icon" href="devx-logo.png" type="image/png"/>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Manrope', sans-serif; background-color: #090d14; color: white; }
+        .font-headline { font-family: 'Space Grotesk', sans-serif; }
+    </style>
+</head>
+<body class="selection:bg-[#4af8e3]/30 min-h-screen flex flex-col">
+
+  <!-- Login Modal Overlay -->
+  <div id="loginScreen" class="fixed inset-0 bg-[#090d14] z-[300] flex items-center justify-center p-4">
+      <div class="bg-[#151a21] border border-white/10 rounded-2xl w-full max-w-sm p-8 text-center shadow-lg relative overflow-hidden">
+         <div class="absolute inset-0 bg-gradient-to-tr from-[#c799ff]/10 to-[#4af8e3]/10 pointer-events-none"></div>
+         <img src="devx-logo.png" style="filter:brightness(0) invert(1)" class="h-10 mx-auto mb-6 relative z-10" alt="Dev-X"/>
+         <h2 class="text-xl font-bold font-headline mb-2 text-white relative z-10">تسجيل دخول الإدارة</h2>
+         <p class="text-xs text-white/50 mb-6 relative z-10">هذه الصفحة مخصصة لفريق عمل Dev-X فقط.</p>
+         
+         <form onsubmit="handleLogin(event)" class="flex flex-col gap-4 text-right relative z-10">
+             <input type="password" id="adminPassword" placeholder="كلمة المرور (12345)" class="w-full bg-[#0a0e14] border border-white/10 rounded-lg px-4 py-3 text-white text-center tracking-widest outline-none focus:border-[#4af8e3] transition" dir="ltr"/>
+             <button type="submit" class="w-full bg-[#c799ff] text-[#440080] font-bold py-3 rounded-lg hover:opacity-90 transition shadow-[0_0_15px_rgba(199,153,255,0.2)]">دخول</button>
+         </form>
+         <p id="loginError" class="text-red-400 text-xs mt-4 hidden relative z-10">كلمة المرور غير صحيحة.</p>
+      </div>
+  </div>
+
+  <!-- Dashboard Main Area (Hidden until login) -->
+  <div id="dashboardApp" class="hidden flex-1 flex flex-col">
+      <!-- Navbar -->
+      <nav class="border-b border-white/5 bg-[#0f141a] p-4 px-6 md:px-12 flex justify-between items-center">
+          <div class="flex items-center gap-3">
+              <img src="devx-logo.png" style="filter:brightness(0) invert(1)" class="h-6" alt="Dev-X"/>
+              <span class="text-lg font-headline font-bold text-[#4af8e3] mt-1">Admin Dashboard</span>
+          </div>
+          <div class="flex items-center gap-4">
+              <a href="index.html" class="text-white/40 hover:text-white text-sm transition">للموقع المباشر</a>
+              <div class="w-px h-4 bg-white/10"></div>
+              <button onclick="logout()" class="text-red-400 hover:text-red-300 text-sm flex items-center gap-1 transition">
+                  <span class="material-symbols-outlined text-[18px]">logout</span> خروج
+              </button>
+          </div>
+      </nav>
+      
+      <!-- Content -->
+      <main class="flex-1 p-6 md:p-12 max-w-7xl mx-auto w-full">
+         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-white/10 pb-6">
+            <div>
+               <h1 class="text-3xl font-headline font-bold mb-2 text-[#c799ff]">الطلاب المسجلين بانتظار التأكيد</h1>
+               <p class="text-white/50 text-sm" id="studentsCount">جاري تحميل البيانات...</p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <button onclick="fetchData()" id="refreshBtn" class="bg-[#151a21] border border-white/10 px-4 py-2 rounded-lg text-sm hover:bg-white/5 transition flex items-center gap-2 text-white/80">
+                   <span class="material-symbols-outlined text-[18px]">refresh</span> <span>تحديث البيانات من السيرفر</span>
+                </button>
+                <a href="https://docs.google.com/spreadsheets/d/1gduYXiOUNK0j8G3hP2G4MAsjye2yzcKz/edit" target="_blank" class="bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] px-4 py-2 rounded-lg text-sm hover:bg-[#25D366]/20 transition flex items-center gap-2 font-bold">
+                   <span class="material-symbols-outlined text-[18px]">table_chart</span> <span>قاعدة بيانات Google Sheets</span>
+                </a>
+            </div>
+         </div>
+         
+         <div class="bg-[#151a21] border border-white/5 rounded-xl overflow-hidden shadow-2xl relative">
+             <div class="overflow-x-auto min-h-[400px]">
+                 <table class="w-full text-right text-sm">
+                     <thead class="bg-[#0a0e14] border-b border-white/5 text-white/50 text-xs tracking-wide">
+                         <tr>
+                             <th class="py-4 px-6 font-medium">التاريخ</th>
+                             <th class="py-4 px-6 font-medium">اسم الطالب</th>
+                             <th class="py-4 px-6 font-medium font-mono text-left">الهاتف (WhatsApp)</th>
+                             <th class="py-4 px-6 font-medium">الدبلومة</th>
+                             <th class="py-4 px-6 font-medium">الفرع المطلوب</th>
+                             <th class="py-4 px-6 font-medium text-center">إجراءات</th>
+                         </tr>
+                     </thead>
+                     <tbody id="tableBody" class="divide-y divide-white/5">
+                         <!-- Loaded via admin.js -->
+                         <tr><td colspan="6" class="py-20 text-center text-white/30 text-lg">لم يتم جلب البيانات حتى الآن. قم بضبط إعداد السكريبت والتحديث.</td></tr>
+                     </tbody>
+                 </table>
+             </div>
+         </div>
+      </main>
+  </div>
+
+<script src="admin.js"></script>
+</body>
+</html>

@@ -343,3 +343,87 @@ window.addEventListener('load', () => {
         init();
     }
 });
+
+
+// ─────────────────────────────────────────────
+// ENROLLMENT MODAL LOGIC
+// ─────────────────────────────────────────────
+function openEnrollModal(courseName) {
+    document.getElementById('enrollCourseName').value = courseName;
+    document.getElementById('displayCourseName').innerText = courseName;
+    
+    document.getElementById('enrollModal').classList.remove('hidden');
+    // small delay for animation
+    setTimeout(() => {
+        const content = document.getElementById('enrollModalContent');
+        if(content) {
+            content.classList.remove('scale-95', 'opacity-0');
+            content.classList.add('scale-100', 'opacity-100');
+        }
+    }, 10);
+}
+
+function closeEnrollModal() {
+    const content = document.getElementById('enrollModalContent');
+    if(content) {
+        content.classList.remove('scale-100', 'opacity-100');
+        content.classList.add('scale-95', 'opacity-0');
+    }
+    setTimeout(() => {
+        document.getElementById('enrollModal').classList.add('hidden');
+        document.getElementById('enrollForm').reset();
+    }, 300);
+}
+
+// TODO: User must replace this URL with the Google Apps Script Web App URL
+const GOOGLE_API_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE";
+
+async function handleEnrollment(event) {
+    event.preventDefault();
+    const btn = document.getElementById('enrollSubmitBtn');
+    const originalText = btn.innerHTML;
+    
+    const name = document.getElementById('enrollName').value;
+    const phone = document.getElementById('enrollPhone').value;
+    const branch = document.getElementById('enrollBranch').value;
+    const course = document.getElementById('enrollCourseName').value;
+    
+    btn.innerHTML = `<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span> <span>جاري الإرسال...</span>`;
+    btn.disabled = true;
+
+    try {
+        if(GOOGLE_API_URL === "YOUR_GOOGLE_SCRIPT_URL_HERE") {
+             // Mock submission
+             await new Promise(r => setTimeout(r, 1500));
+             alert("⚠️ لم يتم ربط Google Sheet بعد! برجاء إعداد سكريبت Google وضع الرابط في app.js");
+        } else {
+             // Real API submission
+             // Note: Google Apps Script Web App deployed requires POST.
+             // Due to CORS on simple apps scripts, no-cors is often used.
+             await fetch(GOOGLE_API_URL, {
+                 method: 'POST',
+                 mode: 'no-cors',
+                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                 body: JSON.stringify({ action: 'enroll', name, phone, branch, course })
+             });
+        }
+        
+        btn.classList.replace('bg-[#4af8e3]', 'bg-green-500');
+        btn.classList.replace('text-[#0a0e14]', 'text-white');
+        btn.innerHTML = `<span class="material-symbols-outlined text-[18px]">check_circle</span> <span>تم التسجيل بنجاح! السكرتارية ستتواصل معك.</span>`;
+        
+        setTimeout(() => {
+            closeEnrollModal();
+            btn.classList.replace('bg-green-500', 'bg-[#4af8e3]');
+            btn.classList.replace('text-white', 'text-[#0a0e14]');
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }, 2500);
+        
+    } catch(err) {
+        alert("حدث خطأ أثناء الاتصال بالخادم. يرجى إعادة المحاولة.");
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }
+}
+

@@ -191,6 +191,7 @@
                     <span class="bg-[#0a0e14] px-3 py-1 rounded text-[11px] text-white/50 border border-white/10">Open British Uni 🇬🇧</span>
                     <span class="bg-[#0a0e14] px-3 py-1 rounded text-[11px] text-white/50 border border-white/10">ALX Africa 🌍</span>
                 </div>
+                <button onclick="openEnrollModal('Impact Maker')" class="w-full bg-[#c799ff] text-[#440080] py-3 rounded font-bold text-sm shadow-[0_0_15px_rgba(199,153,255,0.3)] hover:scale-[1.02] transition block text-center">سجل الآن</button>
              </div>
           </div>
 
@@ -207,8 +208,9 @@
                  </div>
 
                 <div class="absolute inset-x-0 bottom-0 p-6 flex flex-col justify-end text-right">
-                   <h3 class="text-2xl font-headline font-bold mb-2 text-white">No-Code AI</h3>
-                   <p class="text-white/50 text-xs font-medium mb-3">3 شهور — الذكاء الاصطناعي بدون كود للأعمال والتسويق</p>
+                   <h3 class="text-xl lg:text-2xl font-headline font-bold mb-2 text-white">No-Code AI</h3>
+                   <p class="text-white/50 text-[11px] lg:text-xs font-medium mb-3">3 شهور — الذكاء الاصطناعي بدون كود للأعمال والتسويق</p>
+                   <button onclick="openEnrollModal('No-Code AI')" class="w-full border border-white/20 text-white/90 bg-white/5 hover:bg-white/10 py-2 rounded font-bold text-xs transition">سجل الآن</button>
                 </div>
              </div>
 
@@ -222,8 +224,9 @@
                  </div>
 
                 <div class="absolute inset-x-0 bottom-0 p-6 flex flex-col justify-end text-right">
-                    <h3 class="text-2xl font-headline font-bold mb-2 text-white">دبلومة الجونيورز</h3>
-                    <p class="text-white/50 text-xs font-medium">من 7 إلى 15 سنة. أساسيات التفكير البرمجي وتصميم المواقع البسيطة</p>
+                    <h3 class="text-xl lg:text-2xl font-headline font-bold mb-2 text-white">دبلومة الجونيورز</h3>
+                    <p class="text-white/50 text-[11px] lg:text-xs font-medium mb-3">من 7 إلى 15 سنة. أساسيات التفكير البرمجي وتصميم المواقع البسيطة</p>
+                    <button onclick="openEnrollModal('Juniors Diploma')" class="w-full border border-[#ff9500]/30 text-[#ff9500] hover:bg-[#ff9500]/10 py-2 rounded font-bold text-xs transition">سجل الآن</button>
                 </div>
              </div>
           </div>
@@ -457,6 +460,55 @@
            </div>
         </div>
      </div>
+  </div>
+
+  <!-- Enrollment Modal -->
+  <div id="enrollModal" class="fixed inset-0 z-[200] hidden flex items-center justify-center p-4">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm cursor-pointer" onclick="closeEnrollModal()"></div>
+    <!-- Modal Content -->
+    <div class="relative bg-[#0f141a] border border-[#c799ff]/30 shadow-[0_0_60px_rgba(199,153,255,0.15)] rounded-2xl w-full max-w-md p-8 transform transition-all scale-95 opacity-0" id="enrollModalContent">
+      <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4 flex-row-reverse">
+        <h3 class="text-xl font-headline font-bold text-white text-right">طلب تسجيل جديد</h3>
+        <button onclick="closeEnrollModal()" class="text-white/40 hover:text-white transition"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      
+      <form id="enrollForm" onsubmit="handleEnrollment(event)" class="flex flex-col gap-4 text-right" dir="rtl">
+        <div>
+          <label class="text-xs text-white/60 mb-1 block">اسم الطالب ثلاثي *</label>
+          <input type="text" id="enrollName" required class="w-full bg-[#151a21] border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm outline-none focus:border-[#4af8e3] transition"/>
+        </div>
+        <div>
+          <label class="text-xs text-white/60 mb-1 block">رقم الهاتف (واتساب) *</label>
+          <input type="tel" id="enrollPhone" required dir="ltr" placeholder="01xxxxxxxxx" class="w-full bg-[#151a21] border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm text-left outline-none focus:border-[#4af8e3] transition"/>
+        </div>
+        <div>
+          <label class="text-xs text-white/60 mb-1 block">الفرع الأقرب لك *</label>
+          <select id="enrollBranch" required class="w-full bg-[#151a21] border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm outline-none focus:border-[#4af8e3] transition appearance-none">
+            <option value="" disabled selected>اختر الفرع...</option>
+            <option value="أوسيم">أوسيم</option>
+            <option value="روض الفرج">روض الفرج</option>
+            <option value="الدقي">الدقي</option>
+            <option value="الدقي سمارت">الدقي سمارت</option>
+            <option value="البراجيل">البراجيل</option>
+            <option value="الهرم">الهرم</option>
+            <option value="الوراق">الوراق</option>
+            <option value="أونلاين">أونلاين (Online)</option>
+          </select>
+        </div>
+        <input type="hidden" id="enrollCourseName" value=""/>
+        
+        <div class="bg-[#c799ff]/10 border border-[#c799ff]/20 rounded-lg p-3 mt-2 flex items-center justify-between flex-row-reverse border-dashed">
+           <span class="material-symbols-outlined text-[#c799ff] text-base">school</span>
+           <span class="text-xs text-[#c799ff] font-bold" id="displayCourseName"></span>
+        </div>
+        
+        <button type="submit" id="enrollSubmitBtn" class="mt-4 w-full bg-[#4af8e3] text-[#0a0e14] font-bold text-sm py-3 rounded-lg hover:bg-[#3ce0cc] transition flex justify-center flex-row-reverse items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+            <span>تأكيد التسجيل</span>
+        </button>
+      </form>
+    </div>
   </div>
 
 <script src="app.js"></script>
