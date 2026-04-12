@@ -49,15 +49,53 @@
       </nav>
       
       <!-- Content -->
+      <!-- Content -->
       <main class="flex-1 p-6 md:p-12 max-w-7xl mx-auto w-full">
+         
+         <!-- Stats Row -->
+         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="bg-[#151a21]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl flex items-center justify-between shadow-lg relative overflow-hidden group">
+               <div class="absolute inset-0 bg-gradient-to-br from-[#c799ff]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+               <div>
+                  <div class="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">إجمالي التسجيلات</div>
+                  <div class="text-3xl font-headline font-bold text-white" id="statTotal">--</div>
+               </div>
+               <div class="w-12 h-12 rounded-xl bg-[#c799ff]/10 flex items-center justify-center border border-[#c799ff]/20">
+                  <span class="material-symbols-outlined text-[#c799ff]">groups</span>
+               </div>
+            </div>
+            
+            <div class="bg-[#151a21]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl flex items-center justify-between shadow-lg relative overflow-hidden group">
+               <div class="absolute inset-0 bg-gradient-to-br from-[#4af8e3]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+               <div>
+                  <div class="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">أكثر دبلومة طلباً</div>
+                  <div class="text-base font-bold text-white truncate max-w-[150px]" id="statTopCourse">--</div>
+               </div>
+               <div class="w-12 h-12 rounded-xl bg-[#4af8e3]/10 flex items-center justify-center border border-[#4af8e3]/20">
+                  <span class="material-symbols-outlined text-[#4af8e3]">military_tech</span>
+               </div>
+            </div>
+
+            <div class="bg-[#151a21]/80 backdrop-blur-xl border border-white/10 p-6 rounded-2xl flex items-center justify-between shadow-lg relative overflow-hidden group">
+               <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+               <div>
+                  <div class="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-1">حالة السيرفر</div>
+                  <div class="text-3xl font-headline font-bold text-green-400" id="statStatus">Online</div>
+               </div>
+               <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center border border-green-500/20">
+                  <span class="material-symbols-outlined text-green-500">sensors</span>
+               </div>
+            </div>
+         </div>
+
          <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-white/10 pb-6">
             <div>
-               <h1 class="text-3xl font-headline font-bold mb-2 text-[#c799ff]">الطلاب المسجلين بانتظار التأكيد</h1>
+               <h1 class="text-3xl font-headline font-bold mb-2 text-white">الطلاب المسجلين</h1>
                <p class="text-white/50 text-sm" id="studentsCount">جاري تحميل البيانات...</p>
             </div>
             <div class="flex flex-wrap gap-3">
-                <button onclick="fetchData()" id="refreshBtn" class="bg-[#151a21] border border-white/10 px-4 py-2 rounded-lg text-sm hover:bg-white/5 transition flex items-center gap-2 text-white/80">
-                   <span class="material-symbols-outlined text-[18px]">refresh</span> <span>تحديث البيانات من السيرفر</span>
+                <button onclick="fetchData()" id="refreshBtn" class="bg-[#151a21] border border-white/10 px-4 py-2.5 rounded-xl text-sm hover:bg-white/5 transition flex items-center gap-2 text-white/80">
+                   <span class="material-symbols-outlined text-[18px]">refresh</span> <span>تحديث</span>
                 </button>
                 <a href="https://docs.google.com/spreadsheets/d/1gduYXiOUNK0j8G3hP2G4MAsjye2yzcKz/edit" target="_blank" class="bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] px-4 py-2 rounded-lg text-sm hover:bg-[#25D366]/20 transition flex items-center gap-2 font-bold">
                    <span class="material-symbols-outlined text-[18px]">table_chart</span> <span>قاعدة بيانات Google Sheets</span>

@@ -87,35 +87,47 @@ function renderTable(dataArray) {
     
     if(!dataArray || dataArray.length === 0) {
         tableBody.innerHTML = `<tr><td colspan="6" class="py-12 text-center text-white/50">لا يوجد طلاب مسجلين حتى الآن.</td></tr>`;
+        document.getElementById('statTotal').innerText = "0";
+        document.getElementById('statTopCourse').innerText = "N/A";
         return;
     }
     
-    // Sort array by date (assuming newest last in sheets, so we reverse it to show newest on top)
+    // Calculate Stats
+    document.getElementById('statTotal').innerText = dataArray.length;
+    
+    const courseCounts = {};
+    dataArray.forEach(row => {
+        courseCounts[row.course] = (courseCounts[row.course] || 0) + 1;
+    });
+    const topCourse = Object.keys(courseCounts).reduce((a, b) => courseCounts[a] > courseCounts[b] ? a : b);
+    document.getElementById('statTopCourse').innerText = topCourse;
+
+    // Sort array by date
     const reversed = [...dataArray].reverse();
     
     reversed.forEach(row => {
         const tr = document.createElement('tr');
-        tr.className = "hover:bg-white/5 transition border-b border-white/5 last:border-0";
+        tr.className = "hover:bg-white/5 transition border-b border-white/5 last:border-0 group";
         
         let courseBadgeColor = "border-white/20 text-white/70";
         if (row.course.includes("Impact")) courseBadgeColor = "border-blue-400/50 text-blue-400 bg-blue-400/10";
         else if (row.course.includes("Juniors")) courseBadgeColor = "border-orange-400/50 text-orange-400 bg-orange-400/10";
         else if (row.course.includes("No-Code")) courseBadgeColor = "border-purple-400/50 text-purple-400 bg-purple-400/10";
         
-        const phoneFormatted = row.phone.startsWith('0') ? row.phone : `0${row.phone}`;
+        const phoneFormatted = row.phone.toString().startsWith('0') ? row.phone : `0${row.phone}`;
         const waLink = `https://wa.me/2${phoneFormatted}`;
         
         tr.innerHTML = `
-            <td class="py-4 px-6 text-white/50">${row.date || 'اليوم'}</td>
-            <td class="py-4 px-6 font-bold text-white">${row.name}</td>
-            <td class="py-4 px-6 font-mono text-left text-white/70" dir="ltr">${phoneFormatted}</td>
-            <td class="py-4 px-6">
-                <span class="px-3 py-1 rounded-md text-xs font-bold border ${courseBadgeColor}">${row.course}</span>
+            <td class="py-5 px-6 text-white/40 text-xs">${row.date || 'اليوم'}</td>
+            <td class="py-5 px-6 font-bold text-white">${row.name}</td>
+            <td class="py-5 px-6 font-mono text-left text-white/70 group-hover:text-[#4af8e3] transition-colors" dir="ltr">${phoneFormatted}</td>
+            <td class="py-5 px-6">
+                <span class="px-3 py-1.5 rounded-lg text-[10px] font-bold border ${courseBadgeColor}">${row.course}</span>
             </td>
-            <td class="py-4 px-6 text-white/80"><span class="material-symbols-outlined text-[14px] align-middle ml-1 text-white/40">location_on</span>${row.branch}</td>
-            <td class="py-4 px-6 text-center">
-                <a href="${waLink}" target="_blank" class="inline-flex items-center justify-center p-2 rounded-full hover:bg-[#25D366]/20 transition text-[#25D366]" title="مراسلة واتساب">
-                    <span class="material-symbols-outlined">forum</span>
+            <td class="py-5 px-6 text-white/60"><span class="material-symbols-outlined text-[14px] align-middle ml-1 text-white/30">location_on</span>${row.branch}</td>
+            <td class="py-5 px-6 text-center">
+                <a href="${waLink}" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#25D366]/5 hover:bg-[#25D366]/20 transition text-[#25D366]" title="مراسلة واتساب">
+                    <span class="material-symbols-outlined text-[20px]">forum</span>
                 </a>
             </td>
         `;

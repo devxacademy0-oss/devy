@@ -352,27 +352,45 @@ function openEnrollModal(courseName) {
     document.getElementById('enrollCourseName').value = courseName;
     document.getElementById('displayCourseName').innerText = courseName;
     
-    document.getElementById('enrollModal').classList.remove('hidden');
-    // small delay for animation
-    setTimeout(() => {
-        const content = document.getElementById('enrollModalContent');
-        if(content) {
-            content.classList.remove('scale-95', 'opacity-0');
-            content.classList.add('scale-100', 'opacity-100');
-        }
-    }, 10);
+    const modal = document.getElementById('enrollModal');
+    const content = document.getElementById('enrollModalContent');
+    
+    modal.classList.remove('hidden');
+    content.classList.add('modal-animate');
 }
 
 function closeEnrollModal() {
     const content = document.getElementById('enrollModalContent');
-    if(content) {
-        content.classList.remove('scale-100', 'opacity-100');
-        content.classList.add('scale-95', 'opacity-0');
-    }
+    content.style.opacity = '0';
+    content.style.transform = 'scale(0.95)';
+    
     setTimeout(() => {
         document.getElementById('enrollModal').classList.add('hidden');
+        content.style.opacity = '';
+        content.style.transform = '';
+        content.classList.remove('modal-animate');
         document.getElementById('enrollForm').reset();
     }, 300);
+}
+
+// Secret Admin Gateway (Click Dev-X Logo in footer 5 times)
+let logoClickCount = 0;
+let logoClickTimer = null;
+
+const gateway = document.getElementById('adminGateway');
+if(gateway) {
+    gateway.addEventListener('click', () => {
+        logoClickCount++;
+        clearTimeout(logoClickTimer);
+        
+        if(logoClickCount >= 5) {
+            window.location.href = 'admin.html';
+        }
+        
+        logoClickTimer = setTimeout(() => {
+            logoClickCount = 0;
+        }, 3000);
+    });
 }
 
 // TODO: User must replace this URL with the Google Apps Script Web App URL
