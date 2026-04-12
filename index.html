@@ -5,7 +5,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Dev-X — أكاديمية البرمجة والذكاء الاصطناعي</title>
     <link rel="icon" href="devx-logo.png" type="image/png"/>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
@@ -186,9 +186,10 @@
                 <p class="text-white/70 text-sm mb-6 max-w-lg ml-auto">
                     برمجة + AI متكامل. من الصفر حتى سوق العمل. ستتعلم HTML/CSS/JS ثم Python والذكاء الاصطناعي مع بناء مشاريع واقعية.
                 </p>
-                <div class="flex gap-2 justify-end mb-6">
-                    <span class="bg-[#0a0e14] px-3 py-1 roundedtext-[11px] text-white/50 border border-white/10 text-xs">Open British Uni 🇬🇧</span>
-                    <span class="bg-[#0a0e14] px-3 py-1 roundedtext-[11px] text-white/50 border border-white/10 text-xs">ALX Africa 🌍</span>
+                <div class="flex gap-2 justify-end flex-wrap mb-6">
+                    <span class="bg-[#0a0e14] px-3 py-1 rounded text-[11px] text-white/50 border border-white/10">Dev-X 🎓</span>
+                    <span class="bg-[#0a0e14] px-3 py-1 rounded text-[11px] text-white/50 border border-white/10">Open British Uni 🇬🇧</span>
+                    <span class="bg-[#0a0e14] px-3 py-1 rounded text-[11px] text-white/50 border border-white/10">ALX Africa 🌍</span>
                 </div>
              </div>
           </div>
@@ -229,15 +230,45 @@
        </div>
     </section>
 
+    <!-- Official Certificate Section -->
+    <section class="px-6 md:px-12 py-16 border-t border-white/5 bg-[#0f141a]">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-10">
+            <div class="md:w-1/2 flex justify-center order-2 md:order-1 relative group">
+                <div class="absolute inset-0 bg-gradient-to-tr from-[#3156a3]/20 via-[#c799ff]/10 to-transparent blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                <img src="certificate.jpg" alt="شهادة Dev-X الرسمية" class="w-full max-w-sm rounded-lg shadow-[0_30px_60px_rgba(35,53,96,0.3)] border border-white/20 hover:border-[#3156a3]/50 hover:-translate-y-2 hover:scale-[1.03] transition-all duration-500 cursor-pointer object-cover relative z-10 block" onclick="window.open('certificate.jpg', '_blank')" style="aspect-ratio: 3/4;"/>
+                <div class="absolute -bottom-4 right-10 bg-[#3156a3] text-white text-[10px] font-bold px-4 py-2 rounded-full shadow-lg z-20 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0" onclick="window.open('certificate.jpg', '_blank')">
+                    <span class="material-symbols-outlined text-[16px]">zoom_in</span>
+                    اضغط للتكبير
+                </div>
+            </div>
+            <div class="md:w-1/2 text-right order-1 md:order-2">
+                <span class="text-[#4af8e3] border border-[#4af8e3]/30 bg-[#4af8e3]/10 px-4 py-1.5 rounded-full text-xs font-bold mb-6 inline-block">الاعتماد الرسمي</span>
+                <h2 class="text-3xl font-headline font-bold mb-4">شهادة تخرج معتمدة 🎓</h2>
+                <p class="text-white/60 text-sm leading-relaxed mb-6">
+                    بمجرد نجاحك واجتياز المشاريع العملية، ستحصل على الشهادة المعتمدة الرسمية لـ <span class="font-bold text-white">Dev-X</span>. تحمل الشهادة توقيع المؤسس ورقم توثيق (ID) خاص بك لتمييزك. تساعدك شهادتنا في بناء سيرتك الذاتية وإثبات كفاءتك المهنية في سوق العمل بقوة، كما يمكنك مشاركتها على LinkedIn كاعتماد مهني.
+                </p>
+                <div class="flex gap-4 justify-end items-center text-xs font-bold text-right" dir="rtl">
+                    <span class="flex items-center gap-1 text-[#c799ff]"><span class="material-symbols-outlined text-[16px]">verified</span> رقم توثيق فريد</span>
+                    <div class="w-1 h-1 rounded-full bg-white/20"></div>
+                    <span class="flex items-center gap-1 text-white/70"><span class="material-symbols-outlined text-[16px]">print</span> للطباعة والمشاركة</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Branches Section -->
     <section id="branches" class="px-6 md:px-12 py-16 border-t border-white/5 bg-[#090d14]">
         <div class="flex flex-col items-center mb-12 text-center">
             <h2 class="text-3xl font-headline font-bold mb-4">📍 فروعنا حولك</h2>
-            <p class="text-white/50 text-sm">متواجدون في 7 فروع لتسهيل وصولك للتعليم المتميز</p>
+            <p class="text-white/50 text-sm">متواجدون في 9 فروع لتسهيل وصولك للتعليم المتميز</p>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto text-center">
             <div class="bg-[#151a21] p-6 rounded-xl border border-white/5 hover:border-[#4af8e3]/30 transition group flex flex-col justify-center h-full">
-                <div class="text-3xl mb-3">🏙️</div><div class="font-bold text-white group-hover:text-[#4af8e3]">أوسيم</div><div class="text-[10px] text-white/40 mt-1">HM · IQ · الراعي</div>
+                <div class="text-3xl mb-3">🏙️</div><div class="font-bold text-white group-hover:text-[#4af8e3]">أوسيم</div><div class="text-[10px] text-white/40 mt-1">فرع HM</div>
+            </div>
+
+            <div class="bg-[#151a21] p-6 rounded-xl border border-white/5 hover:border-[#4af8e3]/30 transition group flex flex-col justify-center h-full">
+                <div class="text-3xl mb-3">🏛️</div><div class="font-bold text-white group-hover:text-[#4af8e3]">فرع الراعي</div><div class="text-[10px] text-white/40 mt-1">فرع مستقل</div>
             </div>
             <div class="bg-[#151a21] p-6 rounded-xl border border-white/5 hover:border-[#c799ff]/30 transition group flex flex-col justify-center h-full">
                 <div class="text-3xl mb-3">🏢</div><div class="font-bold text-white group-hover:text-[#c799ff]">البراجيل</div><div class="text-[10px] text-white/40 mt-1">مركز IQ</div>
@@ -246,15 +277,17 @@
                 <div class="text-3xl mb-3">🏛️</div><div class="font-bold text-white group-hover:text-[#4af8e3]">الدقي</div><div class="text-[10px] text-white/40 mt-1">Work Space Barah</div>
             </div>
             <div class="bg-[#151a21] p-6 rounded-xl border border-white/5 hover:border-[#c799ff]/30 transition group flex flex-col justify-center h-full">
-                <div class="text-3xl mb-3">🔺</div><div class="font-bold text-white group-hover:text-[#c799ff]">الهرم</div><div class="text-[10px] text-white/40 mt-1">مركز سمارت</div>
+                <div class="text-3xl mb-3">🏛️</div><div class="font-bold text-white group-hover:text-[#c799ff]">الدقي سمارت</div><div class="text-[10px] text-white/40 mt-1">فرع مستقل</div>
             </div>
             <div class="bg-[#151a21] p-6 rounded-xl border border-white/5 hover:border-[#4af8e3]/30 transition group flex flex-col justify-center h-full">
-                <div class="text-3xl mb-3">🌊</div><div class="font-bold text-white group-hover:text-[#4af8e3]">الوراق</div><div class="text-[10px] text-white/40 mt-1">فرع الوراق</div>
+                <div class="text-3xl mb-3">🔺</div><div class="font-bold text-white group-hover:text-[#4af8e3]">الهرم</div><div class="text-[10px] text-white/40 mt-1">مركز سمارت</div>
             </div>
             <div class="bg-[#151a21] p-6 rounded-xl border border-white/5 hover:border-[#c799ff]/30 transition group flex flex-col justify-center h-full">
-                <div class="text-3xl mb-3">🌳</div><div class="font-bold text-white group-hover:text-[#c799ff]">روض الفرج</div><div class="text-[10px] text-white/40 mt-1">فرع روض الفرج</div>
+                <div class="text-3xl mb-3">🌊</div><div class="font-bold text-white group-hover:text-[#c799ff]">الوراق</div><div class="text-[10px] text-white/40 mt-1">فرع الوراق</div>
             </div>
-            <div class="col-span-2 bg-gradient-to-tl from-[#c799ff]/10 to-[#4af8e3]/10 p-6 rounded-xl border border-[#c799ff]/20 flex flex-col justify-center items-center h-full">
+
+            <!-- Since we have exactly 7 standard items, adding this 8th item makes it a perfect grid of 8 elements. -->
+            <div class="bg-gradient-to-tl from-[#c799ff]/10 to-[#4af8e3]/10 p-6 rounded-xl border border-[#c799ff]/20 flex flex-col justify-center items-center h-full">
                 <span class="material-symbols-outlined text-[#4af8e3] text-3xl mb-2">add_location</span>
                 <div class="font-bold text-white">وبنتوسع!</div>
                 <div class="text-[10px] text-white/60">فروع جديدة قريباً</div>
@@ -305,13 +338,20 @@
                            <div class="font-bold text-white text-lg tracking-wider" dir="ltr">0150 741 0800</div>
                        </div>
                    </a>
-                   <div class="inline-flex items-center gap-4 bg-[#151a21] border border-white/10 px-6 py-4 rounded-xl flex-row-reverse w-fit ml-auto">
-                       <span class="material-symbols-outlined text-[#c799ff] text-2xl">mail</span>
+                   <a href="https://wa.me/201507410800" target="_blank" class="inline-flex items-center gap-4 bg-[#151a21] border border-white/10 px-6 py-4 rounded-xl hover:border-[#25D366]/50 transition group flex-row-reverse w-fit ml-auto">
+                       <span class="material-symbols-outlined text-[#25D366] text-2xl group-hover:scale-110 transition">forum</span>
+                       <div>
+                           <div class="text-xs text-white/40 mb-1">واتساب (WhatsApp)</div>
+                           <div class="font-bold text-white text-lg tracking-wider" dir="ltr">0150 741 0800</div>
+                       </div>
+                   </a>
+                   <a href="mailto:devxacademy0@gmail.com" class="inline-flex items-center gap-4 bg-[#151a21] border border-white/10 px-6 py-4 rounded-xl hover:border-[#c799ff]/50 transition group flex-row-reverse w-fit ml-auto">
+                       <span class="material-symbols-outlined text-[#c799ff] text-2xl group-hover:scale-110 transition">mail</span>
                        <div>
                            <div class="text-xs text-white/40 mb-1">البريد الإلكتروني</div>
-                           <div class="font-bold text-white tracking-widest" dir="ltr">info@dev-x.co</div>
+                           <div class="font-bold text-white tracking-widest text-sm sm:text-base" dir="ltr">devxacademy0@gmail.com</div>
                        </div>
-                   </div>
+                   </a>
                </div>
            </div>
 
